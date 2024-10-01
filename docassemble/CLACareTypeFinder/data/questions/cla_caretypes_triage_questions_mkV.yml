@@ -1,0 +1,453 @@
+---
+features:
+  question back button: True
+  navigation back button: False
+  css: CLA_DA_Triage_main.css
+
+---
+translations:
+  - cla_caretypes_triage_questions_es_mkv.xlsx
+
+---
+metadata:
+  title:
+    en: Massachusetts Care Type Finder
+    es: Herramienta de Selección de Cuidados de Massachusetts
+  short title: 
+    en: Mass. Care Type Finder
+    es: Herramienta de Selección de Cuidados de Mass.
+  continue button label: |
+    Next
+  show login: False
+  footer:
+    en: |
+      Care Type Finder is not a substitute for legal advice. 
+      Our <a href="https://www.courtformsonline.org/privacy/">Privacy Policy and Terms of Use</a>.
+    es: |
+      El Buscador de Tipos de Atención no es un sustituto del asesoramiento legal.
+      Nuestra <a href="https://www.courtformsonline.org/privacy/">Política de Privacidad y Términos de Uso</a>.
+
+---
+initial: True
+
+code: |
+  set_language(user.language)
+  process_action()
+
+---
+default screen parts:
+  navigation bar html: |
+    <li class="nav-item dropdown cla-ctf-langselector">
+      <a class="nav-link dropdown-toggle" href="#" id="languageSelector" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Select Your Language
+      </a>
+      <div class="dropdown-menu" aria-labelledby="languageSelector">
+        <a class="dropdown-item" href="${ url_action('set_lang', lang='en') }">English</a>
+        <a class="dropdown-item" href="${ url_action('set_lang', lang='es') }">Español</a>
+      </div>
+    </li>
+
+---
+objects:
+  - user: Individual.using(language='en')
+
+---
+initial: True
+code: |
+  set_language(user.language)
+
+---
+event: set_lang
+code: |
+  if action_argument('lang') in ('en', 'es'):
+    user.language = action_argument('lang')
+    set_save_status('overwrite')
+    
+  if user.language == 'es':
+    set_parts(continue_button_label='Siguiente')
+  else:
+    set_parts(continue_button_label='Next')
+
+---
+#
+# PHASE 0: Language Selection/Handling
+#
+mandatory: True
+
+question: Get started on your care journey.
+
+subquestion: |
+  Does your child need a caregiver, temporary agent, 
+  or guardian in Massachusetts? The Care Type Finder 
+  tool is here to guide you. Answer a few questions 
+  about your family's situation. You'll get suggestions 
+  for the correct type of support using your answers.
+  
+  <a href="https://communitylegal.org/">Community Legal Aid</a> (CLA) created this tool with funding from the <a href="https://www.lsc.gov/">Legal Services Corporation</a>. CLA is solely responsible for its content.
+
+  <table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+      <td style="width: 50%;">
+        [FILE docassemble.CLACareTypeFinder:community-legal-aid-logo.svg, 150px, Community Legal Aid logo]
+      </td>
+      <td style="width: 50%;">
+        [FILE docassemble.CLACareTypeFinder:LSC_logo_horizontal_large.jpg, 150px, Legal Services Corporation logo]
+      </td>
+    </tr>
+  </table>
+  
+  <p class="phase0-prompt">Let's begin your journey:</p>
+  
+continue button field: phase0_ack
+
+css class: phase0-header
+
+---
+#
+# PHASE 1: Determine User's Perspective
+#
+
+question: "**People come here for different reasons:**"
+
+subquestion: |
+  - Parents who want someone to help them make 
+  decisions about their child. _Note: Parents 
+  can be related to their child by birth or 
+  adoption._
+  - Parents who want to stop someone from 
+  becoming their child’s guardian.
+  - Grandparents who care for grandkids 
+  and need more authority to do so.
+
+  **Tell us a little about you:**
+
+fields:
+  - "Are you the child’s parent?": is_parent
+    datatype: yesnoradio
+    css class: phase1-question-container
+
+  - "Has someone filed or is about to file to become your child’s guardian?": third_party_app
+    datatype: yesnoradio
+    css class: phase1-question-container
+    show if:
+      variable: is_parent
+      is: True
+
+  - "Do you agree with the person trying to become your child's guardian?": objecting_to_guardian
+    input type: radio
+    choices:
+      - Agree: False
+      - Disagree: True
+    css class: phase1-question-container
+    show if:
+      variable: third_party_app
+      is: True
+
+---
+mandatory: True
+
+code: |
+  guard_button_label_opts = {
+    'en': 'Next',
+    'es': 'Siguiente'
+  }
+
+  guard_btn_label = guard_button_label_opts[user.language]
+
+  guard_objecting_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:notice_of_appearance_and_objection_standalone.yml&reset=1&from_list=1'
+
+  guard_agreeing_url = 'https://www.masslegalhelp.org/children-families-divorce/guardians-other-caregivers/overview-guardianships-minor'
+
+  # If the user is not the parent, set defaults.
+  if is_parent == False:
+    third_party_app = False
+    objecting_to_guardian = False
+  # If user is the parent, but no third-party involved, set defaults
+  elif is_parent and third_party_app == False:
+    objecting_to_guardian = False
+
+  # Set the next action button based on objecting or not.
+  if objecting_to_guardian:
+    third_party_guard_url = guard_objecting_url
+  else:
+    third_party_guard_url = guard_agreeing_url
+
+  # Send user to third-party guardian flow.
+  if is_parent and third_party_app:
+    third_party_guardianship
+
+---
+event: third_party_guardianship
+
+css class: phase2-decision
+
+question: |
+  % if objecting_to_guardian: 
+  Someone wants to be your child's guardian. 
+  You can say no.
+  % else:
+  Someone wants to be your child's guardian. 
+  You want to agree.
+  % endif
+
+subquestion: |
+  % if objecting_to_guardian: 
+  Explanation:
+
+  - Someone is asking the court to become 
+  the guardian of your child (or children).
+  - If the court agrees, you can’t make 
+  decisions for your child. The guardian 
+  makes all decisions for your child.
+  - You have the right to tell the court 
+  you disagree with this.
+
+  _Important: If this isn't right, please click 
+  ‘Restart’ to change your answers._
+
+  **Click ‘Next’ to get help with filling out 
+  the objection form.**
+  % else:
+  Explanation:
+
+  - Someone is asking the court to become 
+  the guardian of your child (or children).
+  - You can agree to this.
+  - If the court agrees, you can’t make 
+  decisions for your child. The guardian 
+  makes all decisions for your child.
+  - If you agree, you won’t be told about 
+  future court hearings.
+
+  _Important: If this isn't right, please click 
+  ‘Restart’ to change your answers._
+
+  **Click ‘Next’ to get help with filling out 
+  the forms to agree.**
+  % endif
+
+buttons:
+  - Restart: restart
+  - "${guard_btn_label}": exit
+    url: "${third_party_guard_url}"
+
+---
+#
+# PHASE 3: Check helper's qualifications
+# This section should appear only if user is NOT objecting to a Guardianship petition.
+#
+
+question: |
+  Tell us about the person who will help make decisions.
+
+subquestion: |
+  Another adult can play a crucial role in the care of a child 
+  or children. They can provide support, guidance, and even make 
+  decisions about a child’s life.
+
+  **Let's make sure this person is a good choice:**
+
+fields:
+  - "Does the person have a criminal record showing child abuse or neglect?": child_abuse
+    datatype: yesnoradio
+    css class: phase2-question-container
+
+  - "Do they live outside the United States?": helper_location
+    datatype: yesnoradio
+    css class: phase2-question-container
+    js show if: |
+      (val("child_abuse") == true) || (val("child_abuse") == false)
+
+  - "Is this person younger than 18 years old?": helper_age
+    datatype: yesnoradio
+    css class: phase2-question-container
+    js show if: |
+      (val("helper_location") == true) || (val("helper_location") == false)
+
+---
+mandatory: True
+
+code: |
+  button_label = {
+    'en': 'Learn more about who can help',
+    'es': 'Aprende más sobre quién puede ayudar'
+  }
+
+  cont_ineligible_helper_url = 'https://www.masslegalhelp.org/children-families-divorce/guardians-other-caregivers/overview-guardianships-minor'
+
+  # If the user answered yes to any of the helper questions, they are ineligible.
+  if child_abuse == True or helper_location == True or helper_age == True:
+    ineligible_helper
+
+---
+event: ineligible_helper
+
+question: |
+  The person you have in mind is not legally acceptable.
+
+subquestion: |
+  % if child_abuse or helper_location or helper_age:
+  **Under Massachusetts law, the person helping 
+  to make decisions cannot:**
+  % endif 
+
+  % if child_abuse:
+  - Have a history of child abuse or neglect.
+  % endif
+
+  % if helper_location:
+  - Live outside the United States.
+  % endif
+
+  % if helper_age:
+  - Be younger than 18 years old.
+  % endif
+
+  Choose another trustworthy adult.
+
+buttons:
+  - "${button_label[user.language]}": exit
+    url: "${cont_ineligible_helper_url}"
+
+---
+question: |
+  Great choice!
+
+subquestion: |
+  The person you have in mind is acceptable 
+  under Massachusetts law.
+
+  Next, let’s figure out which care type is best 
+  for the child(ren).  Click "Next" to begin.
+
+continue button field: user_saw_helper_eligible
+
+mandatory: True
+
+---
+#
+# PHASE 4: Determine which care type to recommend
+# This section should only appear if the helper is qualified.
+#
+
+question: |
+  Care Types:
+
+subquestion: |
+  Several care types may be available for the child(ren). 
+  The questions you answer next will help us 
+  recommend which care type you could use.
+
+  **Tell us a little about what's going on:**
+
+fields:
+  - "Do the child(ren)’s legal parent(s) agree to another adult making decisions for them?": help_needed
+    datatype: yesnoradio
+    css class: phase3-question-container
+
+  - "Will the child(ren) live in the same home as the decision-maker?": child_home
+    datatype: yesnoradio
+    css class: phase3-question-container
+    js show if: |
+      (val("help_needed") == true)
+
+  - "Would it harm the child(ren) if the parent keeps making decisions?": parent_decision
+    datatype: yesnoradio
+    css class: phase3-question-container
+    js show if: |
+      (val("child_home") == true) || (val("child_home") == false)
+
+mandatory: True
+
+---
+mandatory: True
+
+code: |
+  types_button_label_opts = {
+    'en': 'Next',
+    'es': 'Siguiente'
+  }
+
+  cont_guaridanship_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:petition_for_appointment_of_guardian.yml&reset=1&from_list=1'
+  cont_temp_agent_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:caregiver_authorization_affidavit.yml&reset=1&from_list=1'
+  cont_caregiver_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:caregiver_authorization_affidavit.yml&reset=1&from_list=1'
+
+  cont_caretypes_forms_btn = types_button_label_opts[user.language]
+
+  # If the parent's don't agree, set defaults for other answers.
+  if not help_needed:
+    child_home = False
+    parent_decision = False
+
+  if (help_needed == False) or (parent_decision == True):
+    care_type = "G"
+    cont_caretypes_forms_url = cont_guaridanship_url
+  elif child_home == False:
+    care_type = "T"
+    cont_caretypes_forms_url = cont_temp_agent_url
+  else:
+    care_type = "C"
+    cont_caretypes_forms_url = cont_caregiver_url
+
+---
+mandatory: True
+
+css class: phase4-decision
+
+question: |
+  % if care_type == "G": 
+  Based on your answer choices, consider Guardianship.
+  % elif care_type == "T": 
+  Based on your answer choices, consider a Temporary Agent.
+  % elif care_type == "C": 
+  Based on your answer choices, consider a Caregiver.
+  % endif
+
+subquestion: |
+  % if care_type == "G": 
+  A court chooses an adult to be a Guardian. That person is 
+  like a stand-in parent. The court does this when a 
+  child(ren)'s parents can't care for them.
+
+  Guardianship can last a few days or till a child turns 18. 
+  The guardian can make the all decisions that a parent 
+  would make.
+
+  **We can help you complete the forms needed to have a court
+  choose a child's guardian. Click "Next" to start.** If 
+  you want to rethink your answers, click the "Restart" button.
+  % elif care_type == "T": 
+  A Temporary Agent can act as the parent in almost every way.
+  They cannot consent to adoption. The parents can limit the 
+  power of the agent.
+
+  A Temporary Agent can make decisions for up to 60 days. 
+  The parents can appoint the same temporary agent multiple 
+  times. Choosing a Temporary Agent does not require visiting 
+  a court.
+
+  **We can help you complete the form needed to appoint a 
+  Temporary Agent. Click "Next" to start.** If you want 
+  to rethink your answers, click the "Restart" button.
+  % elif care_type == "C": 
+  A Caregiver supports the parent in caring for a child. 
+  They can only make decisions about medical care or 
+  schooling. A parent can limit the power of the caregiver.
+
+  A Caregiver can make decisions for up to two years. The 
+  parents can appoint the same Caregiver multiple times. 
+  Choosing a Caregiver does not require visiting a court.
+
+  **We can help you complete the form needed to appoint a 
+  Caregiver. Click "Next" to start.** If you want to 
+  rethink your answers, click the "Restart" button.
+  % endif
+
+post: |
+  We want you to be confident in your choice. Visit 
+  the <a href="https://www.masslegalhelp.org/children-families-divorce/guardians-other-caregivers/caregivers-or-guardianship-choosing-best">MassLegalHelp website</a> to see a table comparing all the care type options.
+
+buttons:
+  - Restart: restart
+  - "${cont_caretypes_forms_btn}": exit
+    url: "${cont_caretypes_forms_url}"
