@@ -44,7 +44,7 @@ def find_package_data(where='.', package='', exclude=standard_exclude, exclude_d
     return out
 
 setup(name='docassemble.CLACareTypeFinder',
-      version='1.0.1',
+      version='1.0.2',
       description=('An interview that assists Mass. users in determining whether a caregiver, temporary agent, or guardian is best to care for their children.'),
       long_description="# Community Legal Aid's Care Type Finder\r\n\r\nA Docassemble interview that assists Mass. users in determining whether a caregiver, temporary agent, or guardian is best to care for their children in their stead.\r\n",
       long_description_content_type='text/markdown',
