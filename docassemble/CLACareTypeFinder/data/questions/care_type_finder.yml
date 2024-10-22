@@ -31,7 +31,17 @@ metadata:
 initial: True
 
 code: |
+  if not hasattr(user, 'url_lang_processed'):
+    if 'lang' in url_args and url_args['lang'] in ['en', 'es']:
+      user.language = url_args['lang']
+    
+      if user.language == 'es':
+        set_parts(continue_button_label='Siguiente')
+      else:
+        set_parts(continue_button_label='Next')
+
   set_language(user.language)
+  user.url_lang_processed = True
   process_action()
 
 ---
