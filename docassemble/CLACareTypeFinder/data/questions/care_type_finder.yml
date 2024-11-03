@@ -164,9 +164,9 @@ code: |
 
   guard_btn_label = guard_button_label_opts[user.language]
 
-  guard_objecting_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:notice_of_appearance_and_objection_standalone.yml&reset=1&from_list=1'
+  guard_objecting_url = 'https://apps.suffolklitlab.org/start/minor_guardianship_parent_participate'
 
-  guard_agreeing_url = 'https://www.masslegalhelp.org/children-families-divorce/guardians-other-caregivers/overview-guardianships-minor'
+  guard_agreeing_url = 'https://apps.suffolklitlab.org/start/minor_guardianship_parent_participate'
 
   # If the user is not the parent, set defaults.
   if is_parent == False:
@@ -378,9 +378,9 @@ code: |
     'es': 'Siguiente'
   }
 
-  cont_guaridanship_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:petition_for_appointment_of_guardian.yml&reset=1&from_list=1'
-  cont_temp_agent_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:caregiver_authorization_affidavit.yml&reset=1&from_list=1'
-  cont_caregiver_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:caregiver_authorization_affidavit.yml&reset=1&from_list=1'
+  cont_guaridanship_url = 'Https://apps.suffolklitlab.org/start/minor_guardianship_petition'
+  cont_temp_agent_url = 'https://apps.suffolklitlab.org/start/caregiver_authorization'
+  cont_caregiver_url = 'https://apps.suffolklitlab.org/start/caregiver_authorization'
 
   cont_caretypes_forms_btn = types_button_label_opts[user.language]
 
