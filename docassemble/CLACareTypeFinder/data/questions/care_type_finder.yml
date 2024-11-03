@@ -26,7 +26,51 @@ metadata:
     es: |
       El Buscador de Tipos de Atención no es un sustituto del asesoramiento legal.
       Nuestra <a href="https://www.courtformsonline.org/privacy/">Política de Privacidad y Términos de Uso</a>.
+  description: |
+    If you know a minor in Massachusetts who needs temporary or permanent care, the Care Type Finder
+    can help you decide the right type of support with a few easy to answer questions.
 
+    Some kinds of support need a judge to make a decision. Others can be given by the parent without a judge.
+
+    The Care Type Finder will help you decide between:
+
+    * Guardianship
+    * Temporary agent
+    * Caregiver authorization
+
+    And if you are the parent of the minor, the tool can also help you let the court know that you disagree
+    with someone trying to become the guardian of your child or that you want a new guardian for your child.
+
+    Answer a few questions about your family's situation to get suggestions for the correct type of support.
+  can_I_use_this_form: |
+    You can use this tool if you are a parent, grandparent, or other person who cares about a minor in Massachusetts.
+
+    At the end of this tool, you will be given a link that can help you make
+    the form that you need to take the action that you decide on.
+  before_you_start: |
+    This tool will help you think through the right option for the minor
+    that you care about. You do not need to be ready to take an action when
+    you finish using the tool.
+  maturity: production
+  estimated_completion_minutes: 5
+  estimated_completion_delta: 5
+  languages:
+    - en
+    - es
+  help_page_url: https://www.masslegalhelp.org/children-families-divorce/guardians-other-caregivers/caregivers-or-guardianship-choosing-best
+  help_page_title: "Caregivers or Guardianship: Choosing the Best Option"
+  LIST_topics:
+    - ES-03-03-00-00
+    - FA-04-00-00-00
+    - FA-14-00-00-00
+  tags:
+    - ES-03-03-00-00
+    - FA-04-00-00-00
+    - FA-14-00-00-00
+  jurisdiction: NAM-US-US+MA
+  review_date: 2024-11-01
+  update_notes: |
+    2024-11-03 updated with this metadata and replaced links
 ---
 initial: True
 
