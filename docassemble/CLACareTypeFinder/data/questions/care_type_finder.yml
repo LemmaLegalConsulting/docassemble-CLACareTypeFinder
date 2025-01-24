@@ -164,9 +164,9 @@ code: |
 
   guard_btn_label = guard_button_label_opts[user.language]
 
-  guard_objecting_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:notice_of_appearance_and_objection_standalone.yml&reset=1&from_list=1'
+  guard_objecting_url = f'https://apps.suffolklitlab.org/start/minor_guardianship_parent_participate/?from_list=1&lang={user.language}'
 
-  guard_agreeing_url = 'https://www.masslegalhelp.org/children-families-divorce/guardians-other-caregivers/overview-guardianships-minor'
+  guard_agreeing_url = f'https://apps.suffolklitlab.org/start/minor_guardianship_parent_participate/?from_list=1&lang={user.language}'
 
   # If the user is not the parent, set defaults.
   if is_parent == False:
@@ -282,8 +282,10 @@ code: |
     'en': 'Learn more about who can help',
     'es': 'Aprende más sobre quién puede ayudar'
   }
-
-  cont_ineligible_helper_url = 'https://www.masslegalhelp.org/children-families-divorce/guardians-other-caregivers/overview-guardianships-minor'
+  if user.language == 'es':
+    cont_ineligible_helper_url = 'https://www.masslegalhelp.org/es/ninos-familias-y-divorcio/tutores-y-otros-cuidadores-responsables/tutela-de-un-menor-resumen'
+  else:
+    cont_ineligible_helper_url = 'https://www.masslegalhelp.org/children-families-divorce/guardians-other-caregivers/overview-guardianships-minor'
 
   # If the user answered yes to any of the helper questions, they are ineligible.
   if child_abuse == True or helper_location == True or helper_age == True:
@@ -378,9 +380,9 @@ code: |
     'es': 'Siguiente'
   }
 
-  cont_guaridanship_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:petition_for_appointment_of_guardian.yml&reset=1&from_list=1'
-  cont_temp_agent_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:caregiver_authorization_affidavit.yml&reset=1&from_list=1'
-  cont_caregiver_url = 'https://apps.suffolklitlab.org/interview?i=docassemble.CLAGuardianship:caregiver_authorization_affidavit.yml&reset=1&from_list=1'
+  cont_guardianship_url = f'https://apps.suffolklitlab.org/start/minor_guardianship_petition/?from_list=1&lang={user.language}'
+  cont_temp_agent_url = f'https://apps.suffolklitlab.org/start/minor_guardianship_petition/?from_list=1&lang={user.language}'
+  cont_caregiver_url = f'https://apps.suffolklitlab.org/start/caregiver_authorization/?from_list=1&lang={user.language}'
 
   cont_caretypes_forms_btn = types_button_label_opts[user.language]
 
@@ -391,7 +393,7 @@ code: |
 
   if (help_needed == False) or (parent_decision == True):
     care_type = "G"
-    cont_caretypes_forms_url = cont_guaridanship_url
+    cont_caretypes_forms_url = cont_guardianship_url
   elif child_home == False:
     care_type = "T"
     cont_caretypes_forms_url = cont_temp_agent_url
