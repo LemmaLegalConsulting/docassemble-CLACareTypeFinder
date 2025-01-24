@@ -425,7 +425,7 @@ code: |
   }
 
   cont_guardianship_url = f'https://apps.suffolklitlab.org/start/minor_guardianship_petition/?from_list=1&lang={user.language}'
-  cont_temp_agent_url = f'https://apps.suffolklitlab.org/start/minor_guardianship_petition/?from_list=1&lang={user.language}'
+  cont_temp_agent_url = f'https://apps.suffolklitlab.org/start/caregiver_authorization/?from_list=1&lang={user.language}'
   cont_caregiver_url = f'https://apps.suffolklitlab.org/start/caregiver_authorization/?from_list=1&lang={user.language}'
 
   cont_caretypes_forms_btn = types_button_label_opts[user.language]
