@@ -84,6 +84,7 @@ code: |
 #
 mandatory: True
 
+id: "get started on your care journey"
 question: Get started on your care journey.
 
 subquestion: |
@@ -117,6 +118,7 @@ css class: phase0-header
 # PHASE 1: Determine User's Perspective
 #
 
+id: "people come here for different reasons"
 question: "**People come here for different reasons:**"
 
 subquestion: |
@@ -191,6 +193,7 @@ event: third_party_guardianship
 
 css class: phase2-decision
 
+id: "if objecting to guardian someone wants to be your childs guardian you can say no else someone wants to be your childs guardian you want to agree endif"
 question: |
   % if objecting_to_guardian: 
   Someone wants to be your child's guardian. 
@@ -247,6 +250,7 @@ buttons:
 # This section should appear only if user is NOT objecting to a Guardianship petition.
 #
 
+id: "tell us about the person who will help make decisions"
 question: |
   Tell us about the person who will help make decisions.
 
@@ -292,6 +296,7 @@ code: |
 ---
 event: ineligible_helper
 
+id: "the person you have in mind is not legally acceptable"
 question: |
   The person you have in mind is not legally acceptable.
 
@@ -320,6 +325,7 @@ buttons:
     url: "${cont_ineligible_helper_url}"
 
 ---
+id: "great choice"
 question: |
   Great choice!
 
@@ -340,6 +346,7 @@ mandatory: True
 # This section should only appear if the helper is qualified.
 #
 
+id: "care types"
 question: |
   Care Types:
 
@@ -404,6 +411,7 @@ mandatory: True
 
 css class: phase4-decision
 
+id: "if care type g based on your answer choices consider guardianship elif care type t based on your answer choices consider a temporary agent elif care type c based on your answer choices consider a caregiver endif"
 question: |
   % if care_type == "G": 
   Based on your answer choices, consider Guardianship.
