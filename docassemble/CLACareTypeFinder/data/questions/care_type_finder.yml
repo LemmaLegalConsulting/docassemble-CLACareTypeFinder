@@ -409,9 +409,9 @@ code: |
 ---
 mandatory: True
 
-css class: phase4-decision
+css class: phase4-decision question-care-type-recommendation
 
-id: "if care type g based on your answer choices consider guardianship elif care type t based on your answer choices consider a temporary agent elif care type c based on your answer choices consider a caregiver endif"
+id: care type recommendation
 question: |
   % if care_type == "G": 
   Based on your answer choices, consider Guardianship.
